@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacos-service-monitoring
+  namespace: ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nacos-service-monitoring
+  template:
+    metadata:
+      labels:
+        app: nacos-service-monitoring
+    spec:
+      containers:
+      - name: nacos-service-monitoring
+        image: xx/nacos-service-monitoring
+        ports:
+        - containerPort: 5000
+      imagePullSecrets:
+      - name: aliyun-regcred
+      restartPolicy: Always
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacos-service-monitoring
+  namespace: ops
+spec:
+  selector:
+    app: nacos-service-monitoring
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
